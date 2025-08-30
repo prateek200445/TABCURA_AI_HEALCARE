@@ -1,0 +1,23 @@
+# Node modules
+node_modules/
+
+# Build outputs
+build/
+dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+*.env
+
+# Docker
+*.pid
+*.tar
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db

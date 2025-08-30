@@ -1,0 +1,36 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: prateek2004/backend:latest
+    container_name: backend_service
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - MONGO_URI=mongodb+srv://prateeklachwani24:yH9eDZEmG9iJk6oz@tabcura.kintn.mongodb.net/?retryWrites=true&w=majority&appName=tabcura
+      - JWT_SECRET=your_jwt_secret_key
+      - NODE_ENV=development
+      - GEMINI_API_KEY=AIzaSyDj-j-uhCjpcHXYgXoNZXddvSP8mbEsPLc
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./newfrontend
+      dockerfile: Dockerfile
+    image: prateek2004/frontend:latest
+    container_name: frontend_service
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=http://54.226.170.116:3001
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
