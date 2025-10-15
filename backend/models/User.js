@@ -58,7 +58,7 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Hash password before saving
+// Hash password before saving - fixed to ensure proper hashing
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
     return next();
@@ -73,9 +73,18 @@ userSchema.pre('save', async function(next) {
   }
 });
 
-// Method to compare password
+// Method to compare password - improved with error handling
 userSchema.methods.comparePassword = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+  try {
+    console.log('Comparing passwords in user model method');
+    console.log('- Candidate password length:', candidatePassword.length);
+    console.log('- Stored hash length:', this.password.length);
+    
+    return await bcrypt.compare(candidatePassword, this.password);
+  } catch (error) {
+    console.error('Error comparing passwords:', error);
+    return false;
+  }
 };
 
 // Export User model (make sure it's only exported once)

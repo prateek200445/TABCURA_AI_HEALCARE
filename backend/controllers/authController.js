@@ -97,16 +97,28 @@ exports.signup = async (req, res, next) => {
 // User login controller
 exports.login = async (req, res) => {
   try {
+    console.log('Login attempt with:', req.body);
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ 
+        message: 'Email and password are required' 
+      });
+    }
 
     // Check if user exists
     const user = await User.findOne({ email });
+    console.log('User found:', user ? 'Yes' : 'No');
+    
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
     // Check password
-    const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Comparing password...');
+    const isMatch = await user.comparePassword(password);
+    console.log('Password match:', isMatch ? 'Yes' : 'No');
+    
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
@@ -123,14 +135,19 @@ exports.login = async (req, res) => {
       message: 'Login successful',
       user: {
         id: user.id,
-        name: user.name,
-        email: user.email
+        name: `${user.firstName} ${user.lastName}`,
+        email: user.email,
+        username: user.username,
+        isDoctor: user.isDoctor
       },
       token
     });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Login error:', error);
+    res.status(500).json({ 
+      message: 'Server error during login',
+      error: error.message 
+    });
   }
 };

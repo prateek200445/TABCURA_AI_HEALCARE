@@ -3,21 +3,12 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 // Initialize the Gemini API with proper configuration
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// List available models
-async function listModels() {
-  try {
-    console.log('Available models:', await genAI.listModels());
-  } catch (error) {
-    console.error('Error listing models:', error);
-  }
-}
+// Log initialization
+console.log('Initializing Gemini with API key:', process.env.GEMINI_API_KEY ? 'API key provided' : 'API key missing');
 
-// Call listModels to see available models
-listModels();
-
-// Get the model
+// Get the model - using gemini-pro which is widely available
 const model = genAI.getGenerativeModel({ 
-  model: "gemini-1.5-flash",
+  model: "gemini-pro",
   generationConfig: {
     temperature: 0.7,
     topP: 0.8,

@@ -78,11 +78,16 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Import test user creation utility
+const createTestUser = require('./utils/createTestUser');
+
 // MongoDB Connection
 console.log('Attempting to connect to MongoDB...');
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/reckon')
   .then(() => {
     console.log('MongoDB connected successfully');
+    // Create test user for login after successful connection
+    createTestUser();
   })
   .catch(err => {
     console.error('MongoDB connection error:', err);
